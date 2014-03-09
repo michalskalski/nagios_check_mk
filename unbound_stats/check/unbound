@@ -1,0 +1,26 @@
+#!/usr/bin/python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+#
+# Author: Michal Skalski <michal@skalski.org>
+
+def check_unbound(item, params, info):
+    perfdata = []
+    status = 0
+    for line in info:
+            if line[0] == "status":
+               status = line[1]
+            if re.match("num.query.type.", line[0] ) or re.match("total.num", line[0]) or re.match("unwanted.", line[0]):
+               perfdata.append( ( line[0], line[1]) )
+    if status != "0":
+       return (2, "Critical - unbound not work properly", perfdata)
+    else:
+       return (0, "OK - unbound works properly", perfdata)
+
+# declare the check to Check_MK
+check_info['unbound'] = {
+    "check_function"      : check_unbound,
+    "inventory_function"  : lambda info: [(None, None)],
+    "service_description" : "Unbound",
+    "has_perfdata"        : True,
+}
+

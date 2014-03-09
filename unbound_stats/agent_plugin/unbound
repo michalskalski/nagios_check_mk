@@ -1,0 +1,13 @@
+#!/bin/sh
+if  command -v unbound-control > /dev/null 2>&1
+then
+  echo '<<<unbound>>>'
+  unbound-control status > /dev/null 2>&1
+  status=$?
+  echo "status $status"
+    if [ "$status" -eq 0 ]
+    then
+    unbound-control stats | sed 's/=/ /'
+    fi
+fi
+
